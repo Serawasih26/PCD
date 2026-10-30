@@ -1,0 +1,58 @@
+import cv2
+import numpy as np
+
+def main():
+    # 1. Menyiapkan dan membaca citra (Ganti 'gambar.jpg' dengan nama file Anda)
+    image_path = 'gambar.jpg'
+    image = cv2.imread(image_path)
+
+    if image is None:
+        print(f"Error: Tidak dapat memuat gambar dari '{image_path}'. Pastikan file gambar berada di folder yang sama.")
+        return
+
+    rows, cols, _ = image.shape
+    print(f"Dimensi Citra Asli: Lebar = {cols} px, Tinggi = {rows} px")
+
+    # 2. Implementasi Translation (Pergeseran, contoh: geser ke kanan 50px dan ke bawah 50px)
+    M_translasi = np.float32([[1, 0, 50], [0, 1, 50]])
+    img_translation = cv2.warpAffine(image, M_translasi, (cols, rows))
+
+    # 3. Implementasi Scaling dengan faktor 0,5 (perkecil) dan 2 (perbesar)
+    img_scaling_05 = cv2.resize(image, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_LINEAR)
+    img_scaling_2 = cv2.resize(image, None, fx=2.0, fy=2.0, interpolation=cv2.INTER_LINEAR)
+
+    # 4. Implementasi Rotation dengan sudut 45°, 90°, dan 180°
+    center = (cols / 2, rows / 2)
+    
+    M_rot_45 = cv2.getRotationMatrix2D(center, 45, 1.0)
+    img_rotation_45 = cv2.warpAffine(image, M_rot_45, (cols, rows))
+
+    M_rot_90 = cv2.getRotationMatrix2D(center, 90, 1.0)
+    img_rotation_90 = cv2.warpAffine(image, M_rot_90, (cols, rows))
+
+    M_rot_180 = cv2.getRotationMatrix2D(center, 180, 1.0)
+    img_rotation_180 = cv2.warpAffine(image, M_rot_180, (cols, rows))
+
+    # 5. Implementasi Horizontal Flip dan Vertical Flip
+    img_h_flip = cv2.flip(image, 1)  # flipCode = 1 (Horizontal)
+    img_v_flip = cv2.flip(image, 0)  # flipCode = 0 (Vertical)
+
+    # 6. Menampilkan citra asli dan seluruh hasil transformasi
+    cv2.imshow('1. Citra Asli', image)
+    cv2.imshow('2. Translation', img_translation)
+    cv2.imshow('3a. Scaling 0.5', img_scaling_05)
+    cv2.imshow('3b. Scaling 2.0', img_scaling_2)
+    cv2.imshow('4a. Rotation 45 Derajat', img_rotation_45)
+    cv2.imshow('4b. Rotation 90 Derajat', img_rotation_90)
+    cv2.imshow('4c. Rotation 180 Derajat', img_rotation_180)
+    cv2.imshow('5a. Horizontal Flip', img_h_flip)
+    cv2.imshow('5b. Vertical Flip', img_v_flip)
+
+    print("\nSemua citra hasil transformasi berhasil ditampilkan.")
+    print("Tekan tombol apa saja pada keyboard untuk menutup jendela...")
+    
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+    main()
